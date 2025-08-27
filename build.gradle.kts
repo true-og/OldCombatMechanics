@@ -7,18 +7,20 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.papermc.hangarpublishplugin.model.Platforms
 import java.io.ByteArrayOutputStream
+import org.gradle.process.ExecOperations
+import javax.inject.Inject
 
 val paperVersion: List<String> = (property("gameVersions") as String)
         .split(",")
         .map { it.trim() }
 
-
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.6"
     // For ingametesting
     //id("io.papermc.paperweight.userdev") version "1.5.10"
     idea
+	eclipse
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
@@ -123,15 +125,23 @@ tasks.assemble {
     dependsOn("shadowJar")
 }
 
-// Function to execute Git commands
-fun executeGitCommand(vararg command: String): String {
-    val byteOut = ByteArrayOutputStream()
-    project.exec {
-        commandLine = listOf("git", *command)
-        standardOutput = byteOut
+abstract class GitHelper {
+    @get:Inject
+    abstract val execOps: ExecOperations
+    fun run(vararg command: String): String {
+        val byteOut = ByteArrayOutputStream()
+        execOps.exec {
+            commandLine("git", *command)
+            standardOutput = byteOut
+        }
+        return byteOut.toString(Charsets.UTF_8.name()).trim()
     }
-    return byteOut.toString(Charsets.UTF_8.name()).trim()
 }
+
+val gitHelper = objects.newInstance(GitHelper::class)
+
+// Function to execute Git commands
+fun executeGitCommand(vararg command: String): String = gitHelper.run(*command)
 
 // Function to get the latest commit message
 fun latestCommitMessage(): String {
@@ -178,3 +188,4 @@ hangarPublish {
         }
     }
 }
+
