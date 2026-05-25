@@ -236,6 +236,11 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.jar {
+    // The runtime plugin is the shaded jar below; do not emit an unbundled plugin artefact.
+    enabled = false
+}
+
 val shadowJarTask =
     tasks.named<ShadowJar>("shadowJar") {
         dependsOn("jar")
