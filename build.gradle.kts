@@ -30,6 +30,7 @@ plugins {
     id("com.diffplug.spotless") version "8.5.1"
     id("com.gradleup.shadow") version "9.4.1"
     id("xyz.jpenilla.run-paper") version "3.0.2"
+    eclipse
     idea
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
