@@ -33,6 +33,9 @@ disabled_modules:
   - "disable-sword-sweep-particles"
   - "disable-attack-sounds"
   - "attack-range"
+  # KnockbackSync-OG owns player knockback on this server stack.
+  - "old-player-knockback"
+  - "update-checker"
 
 modesets:
   # Modesets are lists of modules that are enabled for a player in that mode.

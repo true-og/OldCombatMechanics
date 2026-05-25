@@ -46,6 +46,8 @@ public class ModuleAttackRange extends OCMModule implements Listener {
     private float mobFactor;
 
     private PaperAttackRangeAdapter paperAdapter;
+    private Throwable unsupportedCause;
+    private boolean warnedUnsupported;
 
     public ModuleAttackRange(OCMMain plugin) {
         super(plugin, "attack-range");
@@ -60,7 +62,7 @@ public class ModuleAttackRange extends OCMModule implements Listener {
             supported = true;
         } catch (Throwable t) {
             supported = false;
-            Messenger.warn("Attack range data-component API not available; module disabled. Required Paper data-component classes or methods were not detected. (" + t.getClass().getSimpleName() + ": " + t.getMessage() + ")");
+            unsupportedCause = t;
         }
     }
 
@@ -74,7 +76,13 @@ public class ModuleAttackRange extends OCMModule implements Listener {
 
     @Override
     public void reload() {
-        if (!supported) return;
+        if (!supported) {
+            if (isEnabled() && !warnedUnsupported) {
+                Messenger.warn("Attack range data-component API not available; module disabled. Required Paper data-component classes or methods were not detected. (" + unsupportedCause.getClass().getSimpleName() + ": " + unsupportedCause.getMessage() + ")");
+                warnedUnsupported = true;
+            }
+            return;
+        }
 
         minRange = (float) module().getDouble("min-range", 0.0);
         maxRange = (float) module().getDouble("max-range", 3.0);

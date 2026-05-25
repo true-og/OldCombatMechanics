@@ -41,6 +41,11 @@ public class Config {
             "attack-cooldown-tracker",
             "entity-damage-listener"
     )));
+    // Keep older retained configs viable when fork-specific/nonessential modules are newly introduced or omitted.
+    private static final Set<String> unassignedDefaultDisabledModules = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            "old-player-knockback",
+            "update-checker"
+    )));
 
     public static void initialise(OCMMain plugin) {
         Config.plugin = plugin;
@@ -204,6 +209,10 @@ public class Config {
                 continue;
             }
             if (modulesInModesets.contains(moduleName)) {
+                continue;
+            }
+            if (unassignedDefaultDisabledModules.contains(moduleName)) {
+                disabledModules.add(moduleName);
                 continue;
             }
             errors.add("Module not assigned to any list: " + moduleName);
