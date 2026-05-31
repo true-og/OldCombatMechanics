@@ -25,12 +25,12 @@ always_enabled_modules:
   - "old-burn-delay"
   - "old-brewing-stand"
   - "disable-enderpearl-cooldown"
+  - "disable-sword-sweep-particles"
 
 disabled_modules:
   # Modules listed here are always disabled, regardless of modeset.
   # Of course, disabling a module which disables something will enable that something!
   - "disable-offhand"
-  - "disable-sword-sweep-particles"
   - "disable-attack-sounds"
   - "attack-range"
   # KnockbackSync-OG owns player knockback on this server stack.
@@ -101,10 +101,11 @@ disable-attack-cooldown:
     NETHERITE_SPEAR: 0.87
 
 attack-frequency:
-  # Allows changing the player invulnerability between hits
-  # The hit delay to apply. Default for 1.9+ is 20 ticks (1 second)
-  playerDelay: 18
-  mobDelay: 16
+  # Allows changing the player invulnerability between hits.
+  # Vanilla 1.8 EntityLivingBase.maxHurtResistantTime = 20 ticks. Setting playerDelay to 20
+  # reproduces the half-rule combo window (hits after 10t allowed only at higher damage as in 1.8),
+  playerDelay: 20
+  mobDelay: 18
 
 attack-range:
   # Applies 1.8-style hit detection (smaller hitbox margin, shorter creative reach).
