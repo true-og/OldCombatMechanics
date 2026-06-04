@@ -26,37 +26,32 @@ always_enabled_modules:
   - "old-brewing-stand"
   - "disable-enderpearl-cooldown"
   - "disable-sword-sweep-particles"
+  - "disable-attack-sounds"
+  - "disable-attack-cooldown"
+  - "disable-sword-sweep"
+  - "old-tool-damage"
+  - "sword-blocking"
+  - "shield-damage-reduction"
+  - "old-golden-apples"
+  - "old-player-regen"
+  - "old-armour-strength"
+  - "old-potion-effects"
+  - "old-critical-hits"
 
 disabled_modules:
   # Modules listed here are always disabled, regardless of modeset.
   # Of course, disabling a module which disables something will enable that something!
   - "disable-offhand"
-  - "disable-attack-sounds"
   - "attack-range"
   # KnockbackSync-OG owns player knockback on this server stack.
   - "old-player-knockback"
   - "update-checker"
 
 modesets:
-  # Modesets are lists of modules that are enabled for a player in that mode.
-  # You can create, remove, and rename as many modesets as you like by modifying the list below.
-  # Mixed-mode ownership: offensive direct PvP mechanics follow the attacker's mode.
-  # Armour and shields follow the defender's mode.
-  # Environmental damage follows the affected player or world mode.
-  # PlaceholderAPI: %ocm_modeset%
-  old:
-    - "disable-attack-cooldown"
-    - "disable-sword-sweep"
-    - "old-tool-damage"
-    - "sword-blocking"
-    - "shield-damage-reduction"
-    - "old-golden-apples"
-    - "old-player-regen"
-    - "old-armour-strength"
-    - "old-potion-effects"
-    - "old-critical-hits"
-  new:
-    - "old-golden-apples"
+  # Every combat module lives in always_enabled_modules; no per-player toggling.
+  # An empty `old` modeset is retained as a placeholder so the validator at
+  # Config.java:128 and the public getAllowedModesets API stay non-empty.
+  old: []
 
 worlds:
   # Controls which modesets are allowed in each world.
