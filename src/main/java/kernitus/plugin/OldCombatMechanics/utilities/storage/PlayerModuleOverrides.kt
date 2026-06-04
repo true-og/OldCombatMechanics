@@ -32,7 +32,8 @@ object PlayerModuleOverrides {
 
     @JvmStatic
     fun getOverride(human: HumanEntity, moduleName: String): PlayerModuleOverride {
-        requireOnline(human)
+        // Read path tolerates not-yet-online HumanEntity (login packet race with PacketEvents listeners).
+        if (human is OfflinePlayer && !human.isOnline) return PlayerModuleOverride.DEFAULT
         val perPlayer = overridesByPlayer[human.uniqueId] ?: return PlayerModuleOverride.DEFAULT
         return perPlayer.getOrDefault(ModuleLoader.normaliseModuleName(moduleName), PlayerModuleOverride.DEFAULT)
     }
@@ -65,5 +66,4 @@ object PlayerModuleOverrides {
         }
         require(isOnline) { "HumanEntity ${human.name} is not online" }
     }
-
 }

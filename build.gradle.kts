@@ -39,14 +39,22 @@ spotless {
     // Avoid a noisy first formatter rollout; enforce Spotless on changed files.
     ratchetFrom("origin/master")
 
+    // Plugin package follows Java convention `kernitus.plugin.OldCombatMechanics.*` — renaming would break
+    // every consumer. Disable ktlint's lowercase-only package rule plugin-wide.
+    val ktlintOverrides =
+        mapOf(
+            "ktlint_standard_package-name" to "disabled",
+            "ktlint_standard_filename" to "disabled"
+        )
+
     kotlin {
         target("src/**/*.kt")
-        ktlint()
+        ktlint().editorConfigOverride(ktlintOverrides)
     }
 
     kotlinGradle {
         target("*.gradle.kts", "gradle/**/*.gradle.kts")
-        ktlint()
+        ktlint().editorConfigOverride(ktlintOverrides)
         endWithNewline()
     }
 
@@ -55,6 +63,14 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
+}
+
+// Auto-apply formatters before compile so cosmetic issues self-heal instead of failing the build.
+tasks.named("compileKotlin") {
+    dependsOn("spotlessApply")
+}
+tasks.named("compileJava") {
+    dependsOn("spotlessApply")
 }
 
 tasks.named("check") {
@@ -183,18 +199,16 @@ dependencies {
 }
 
 // Substitute ${pluginVersion} in plugin.yml with version defined above
-class ExpandPluginVersionAction(
-    private val version: String
-) : Action<FileCopyDetails>,
+class ExpandPluginVersionAction(private val version: String) :
+    Action<FileCopyDetails>,
     Serializable {
     override fun execute(details: FileCopyDetails) {
         details.expand(mapOf("pluginVersion" to version))
     }
 }
 
-class ExpandBuildCommitAction(
-    private val commit: String
-) : Action<FileCopyDetails>,
+class ExpandBuildCommitAction(private val commit: String) :
+    Action<FileCopyDetails>,
     Serializable {
     override fun execute(details: FileCopyDetails) {
         details.expand(mapOf("buildCommit" to commit))
