@@ -37,11 +37,11 @@ always_enabled_modules:
   - "old-armour-strength"
   - "old-potion-effects"
   - "old-critical-hits"
+  - "disable-offhand"
 
 disabled_modules:
   # Modules listed here are always disabled, regardless of modeset.
   # Of course, disabling a module which disables something will enable that something!
-  - "disable-offhand"
   - "attack-range"
   # KnockbackSync-OG owns player knockback on this server stack.
   - "old-player-knockback"
